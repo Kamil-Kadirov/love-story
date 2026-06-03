@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для тебя ❤️</title>
+    
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Caveat:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        /* ЖИВОЙ ЯРКИЙ РОМАНТИЧНЫЙ ФОН */
+        body {
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #fe9a8b, #fbc5cd);
+            background-size: 400% 400%;
+            animation: gradientBg 15s ease infinite;
+            color: #333; overflow-x: hidden; position: relative;
+        }
+        @keyframes gradientBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* КРУПНАЯ СВЕТЯЩАЯСЯ ГИРЛЯНДА */
+        .garland { position: absolute; top: 0; left: 0; width: 100%; height: 70px; display: flex; justify-content: space-around; pointer-events: none; z-index: 10; }
+        .garland-light { font-size: 28px; animation: blink 1.2s infinite alternate; filter: drop-shadow(0 0 10px #ff3385); }
+        .garland-light:nth-child(even) { animation-delay: 0.6s; filter: drop-shadow(0 0 10px #fffa65); }
+        @keyframes blink { 0% { opacity: 0.4; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.2); } }
+
+        /* ЭФФЕКТНЫЙ ШЛЕЙФ ИЗ ЗВЕЗД И СЕРДЕЧЕК */
+        .magic-sparkle { position: fixed; pointer-events: none; z-index: 99999; font-size: 22px; animation: sparkleFade 0.8s forwards ease-out; }
+        @keyframes sparkleFade { 0% { transform: translate(-50%, -50%) scale(1.5) rotate(0deg); opacity: 1; filter: drop-shadow(0 0 5px #fff); } 100% { transform: translate(-50%, -50%) scale(0) rotate(360deg); opacity: 0; } }
+
+        /* ЯРКИЕ ПАРИРУЮЩИЕ СТИКЕРЫ НА ФОНЕ */
+        .sticker { position: absolute; font-size: 55px; pointer-events: none; z-index: 1; animation: floatSticker 5s infinite alternate ease-in-out; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.08)); }
+        @keyframes floatSticker { 0% { transform: translateY(0) rotate(-5deg); } 100% { transform: translateY(-25px) rotate(5deg); } }
+
+        /* ЭКРАН-ЗАСТАВКА */
+        #welcome-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(135deg, #ff9a9e, #fecfef); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transition: opacity 0.8s ease, visibility 0.8s; padding: 20px; }
+        #welcome-overlay h1 { font-family: 'Caveat', cursive; font-size: 5rem; color: #fff; text-shadow: 0 10px 20px rgba(204,0,82,0.3); margin-bottom: 40px; }
+        .enter-btn { background: #fff; color: #cc0052; border: none; padding: 18px 50px; font-size: 1.4rem; font-weight: bold; border-radius: 50px; cursor: pointer; box-shadow: 0 15px 30px rgba(204, 0, 82, 0.3); transition: all 0.3s; }
+        .enter-btn:hover { transform: scale(1.08); box-shadow: 0 20px 40px rgba(204, 0, 82, 0.4); }
+
+        #hearts-container, #confetti-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; }
+        #hearts-container { z-index: 2; } #confetti-container { z-index: 999; }
+
+        .music-toggle { position: fixed; top: 20px; right: 20px; background: #fff; border: none; border-radius: 50%; width: 55px; height: 55px; font-size: 1.6rem; cursor: pointer; box-shadow: 0 8px 20px rgba(204, 0, 82, 0.2); z-index: 1000; display: flex; align-items: center; justify-content: center; transition: transform 0.3s; }
+        .music-toggle.playing { animation: pulse 1.2s infinite; }
+
+        /* ЭФФЕКТНЫЙ ВЫЛЕТ ЭКРАНОВ */
+        .screen { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 60px 20px; position: relative; z-index: 3; opacity: 0; transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .screen:nth-child(odd) { transform: translateX(-60px) scale(0.9); }
+        .screen:nth-child(even) { transform: translateX(60px) scale(0.9); }
+        .screen.reveal-active { opacity: 1; transform: translateX(0) scale(1); }
+
+        h1 { font-family: 'Caveat', cursive; font-size: 5.5rem; color: #fff; text-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 10px; }
+        h2 { font-family: 'Caveat', cursive; font-size: 3.8rem; color: #cc0052; margin-bottom: 20px; text-shadow: 0 2px 5px rgba(255,255,255,0.5); }
+        p { font-size: 1.3rem; max-width: 580px; line-height: 1.6; color: #444; font-weight: 600; }
+        
+        /* ТАЙМЕР-ОБЛАКО */
+        .timer-box { background: rgba(255, 255, 255, 0.85); padding: 20px 40px; border-radius: 30px; margin-top: 20px; box-shadow: 0 15px 35px rgba(204, 0, 82, 0.15); border: 2px solid #fff; }
+        .timer-box span { font-weight: 800; color: #cc0052; font-size: 1.7rem; }
+
+        /* НЕОНОВЫЙ ПОЛЯРОИД */
+        .photo-card { margin: 25px 0; background: #fff; padding: 20px 20px 55px 20px; border-radius: 16px; box-shadow: 0 25px 50px rgba(204, 0, 82, 0.2); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 3px solid #fff; }
+        .photo-card img { max-width: 100%; max-height: 520px; border-radius: 8px; display: block; }
+        .photo-card:hover { transform: scale(1.06) rotate(3deg); box-shadow: 0 35px 60px rgba(204, 0, 82, 0.35); }
+
+        /* КНОПКА-КОНВЕРТ */
+        .letter-btn { background: linear-gradient(45deg, #ff3385, #cc0052); color: #fff; border: none; padding: 14px 35px; font-size: 1.1rem; font-weight: bold; border-radius: 50px; cursor: pointer; margin-top: 20px; box-shadow: 0 10px 20px rgba(204, 0, 82, 0.2); transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px; }
+        .letter-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 25px rgba(204, 0, 82, 0.3); }
+        
+        /* СВИТОК С ПИСЬМОМ */
+        .letter-content { max-width: 550px; font-family: 'Caveat', cursive; font-size: 1.8rem; line-height: 1.5; color: #600; background: #fffbf0; padding: 0; max-height: 0; overflow: hidden; border-radius: 16px; transition: all 0.6s ease-in-out; margin-top: 15px; opacity: 0; box-shadow: inset 0 0 20px rgba(0,0,0,0.05); }
+        .letter-content.open { padding: 25px; max-height: 350px; opacity: 1; border: 2px solid #ffccd5; }
+
+        .heart-icon { font-size: 3.8rem; color: #ff3385; animation: pulse 1.3s infinite; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1)); }
+        .surprise-btn { background: linear-gradient(45deg, #fffa65, #ff3385, #cc0052); background-size: 200% auto; color: white; border: none; padding: 18px 55px; font-size: 1.4rem; font-weight: bold; border-radius: 50px; cursor: pointer; margin-top: 45px; box-shadow: 0 15px 35px rgba(204, 0, 82, 0.35); transition: all 0.3s; animation: gradientBtn 3s infinite; }
+        @keyframes gradientBtn { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .surprise-btn:hover { transform: scale(1.07); box-shadow: 0 20px 45px rgba(204, 0, 82, 0.5); }
+        
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+        .falling-heart { position: absolute; animation: fall linear infinite; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.05)); }
+        @keyframes fall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(105vh) rotate(360deg); opacity: 0; } }
+        .confetti-piece { position: fixed; width: 12px; height: 12px; animation: explode 1.5s ease-out forwards; z-index: 99999; }
+        @keyframes explode { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(var(--x), var(--y)) rotate(720deg); opacity: 0; } }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"><div class="glow-circle"></div><div class="glow-circle"></div></div>
+    <div class="garland">
+        <span class="garland-light">🌸</span><span class="garland-light">❤️</span>
+        <span class="garland-light">💖</span><span class="garland-light">🌸</span>
+        <span class="garland-light">❤️</span><span class="garland-light">💖</span>
+        <span class="garland-light">🌸</span><span class="garland-light">❤️</span>
+    </div>
+
+    <audio id="bg-music" loop><source src="static/music.mp3" type="audio/mpeg"></audio>
+    <button class="music-toggle" onclick="toggleMusic()">🎵</button>
+    
+    <div id="hearts-container"></div>
+    <div id="confetti-container"></div>
+
+    <div id="welcome-overlay">
+        <h1>Для тебя, Котёнок... ✨</h1>
+        <button class="enter-btn" onclick="startEverything()">Открыть послание ✉️</button>
+    </div>
+    
+    <section class="screen">
+        <h1>Привет, Котёнок! ❤️</h1>
+        <p>Я создал это место для тебя. И вот сколько мы уже вместе:</p>
+        <div class="timer-box"><span id="timer">Загрузка времени...</span></div>
+        <div class="heart-icon" style="margin-top: 50px;">👇</div>
+    </section>
+    <!-- ФОТО 1 -->
+    <section class="screen" data-id="1">
+        <h2>Помнишь, как всё начиналось? 🥰</h2>
+        <div class="photo-card"><img src="static/photo1.jpg" alt="Фото"></div>
+        <button class="letter-btn" onclick="toggleLetter(this)">Открыть письмо 💌</button>
+        <div class="letter-content">Этот день стал отправной точкой нашего счастья. Я помню каждую деталь, твой взгляд и волнение...</div>
+    </section>
+
+    <!-- ФОТО 2 -->
+    <section class="screen" data-id="2">
+        <h2>Праздник у твоей подруги 🎉</h2>
+        <div class="photo-card"><img src="static/photo2.jpg" alt="Фото"></div>
+        <button class="letter-btn" onclick="toggleLetter(this)">Открыть письмо 💌</button>
+        <div class="letter-content">Ты была там самой яркой и красивой! Я весь вечер смотрел только на тебя и улыбался как ребенок.</div>
+    </section>
+
+    <!-- ФОТО 3 -->
+    <section class="screen" data-id="3">
+        <h2>Твоя искренняя улыбка ✨</h2>
+        <div class="photo-card"><img src="static/photo3.jpg" alt="Фото"></div>
+        <button class="letter-btn" onclick="toggleLetter(this)">Открыть письмо 💌</button>
+        <div class="letter-content">Твой смех способен растопить любой лед. Обожаю моменты, когда ты искренне и счастливо улыбаешься!</div>
+    </section>
+
+    <!-- ФОТО 4 -->
+    <section class="screen" data-id="4">
+        <h2>Один из теплых вечеров ☕</h2>
+        <div class="photo-card"><img src="static/photo4.jpg" alt="Фото"></div>
+        <button class="letter-btn" onclick="toggleLetter(this)">Открыть письмо 💌</button>
+        <div class="letter-content">Когда за окном суета, а мы сидим вдвоем, пьем теплый чай и понимаем, что больше ничего в этом мире не нужно.</div>
+    </section>
+
+    <!-- ФОТО 5 -->
+    <section class="screen" data-id="5">
+        <h2>Самый лучший день ☀️</h2>
+        <div class="photo-card"><img src="static/photo5.jpg" alt="Фото"></div>
+        <button class="letter-btn" onclick="toggleLetter(this)">Открыть письмо 💌</button>
+        <div class="letter-content">С тобой абсолютно любое место на земле превращается в уютный дом. Наше лучшее свидание!</div>
+    </section>
+
+    <!-- ФОТО 6 -->
+    <section class="screen" data-id="6">
+        <h2>Наши забавные моменты 🤪</h2>
+        <div class="photo-card"><img src="static/photo6.jpg" alt="Фото"></div>
+        <button class="letter-btn" onclick="toggleLetter(this)">Открыть письмо 💌</button>
+        <div class="letter-content">Обожаю, что мы можем дурачиться вместе, строить рожицы и быть на 100% самими собой.</div>
+    </section>
+
+    <!-- ФОТО 7 -->
+    <section class="screen" data-id="7">
+        <h2>Невероятная ты 🌹</h2>
+        <div class="photo-card"><img src="static/photo7.jpg" alt="Фото"></div>
+        <button class="letter-btn" onclick="toggleLetter(this)">Открыть письмо 💌</button>
+        <div class="letter-content">Каждый день я открываю в тебе что-то новое и прекрасное. Ты мое главное вдохновение.</div>
+    </section>
+
+    <!-- ФОТО 8 -->
+    <section class="screen" data-id="8">
+        <h2>Уютные прогулки вместе 👫</h2>
+        <div class="photo-card"><img src="static/photo8.jpg" alt="Фото"></div>
+        <button class="letter-btn" onclick="toggleLetter(this)">Открыть письмо 💌</button>
+        <div class="letter-content">Просто идти рядом и держать твою маленькую, теплую ладошку в своей руке — это и есть идеальный момент.</div>
+    </section>
+
+    <!-- ФОТО 9 -->
+    <section class="screen" data-id="9">
+        <h2>Там, где нам было хорошо 🌊</h2>
+        <div class="photo-card"><img src="static/photo9.jpg" alt="Фото"></div>
+        <button class="letter-btn" onclick="toggleLetter(this)">Открыть письмо 💌</button>
+        <div class="letter-content">Эти эмоции останутся со мной навсегда. Безумно хочу повторить это приключение вместе с тобой!</div>
+    </section>
+
+    <!-- ФОТО 10 -->
+    <section class="screen" data-id="10">
+        <h2>Сквозь любые времена 🍂</h2>
+        <div class="photo-card"><img src="static/photo10.jpg" alt="Фото"></div>
+        <button class="letter-btn" onclick="toggleLetter(this)">Открыть письмо 💌</button>
+        <div class="letter-content">Лето, осень, зима или весна — неважно. Любое время года становится волшебным, если мы проживаем его вдвоем.</div>
+    </section>
+
+    <!-- ФОТО 11 -->
+    <section class="screen" data-id="11">
+        <h2>Мой самый любимый кадр 📸</h2>
+        <div class="photo-card"><img src="static/photo11.jpg" alt="Фото"></div>
+        <button class="letter-btn" onclick="toggleLetter(this)">Открыть письмо 💌</button>
+        <div class="letter-content">Посмотри, сколько искреннего счастья в наших глазах на этой фотографии. Это любовь.</div>
+    </section>
+
+    <!-- ФОТО 12 -->
+    <section class="screen" data-id="12">
+        <h2>И это только начало... ⏳</h2>
+        <div class="photo-card"><img src="static/photo12.jpg" alt="Фото"></div>
+        <button class="letter-btn" onclick="toggleLetter(this)">Открыть письмо 💌</button>
+        <div class="letter-content">Перед нами целая жизнь, наполненная миллионами новых крутых моментов, улыбок и общих побед!</div>
+    </section>
+
+    <section class="screen">
+        <h1 class="heart-icon">❤️</h1>
+        <h2>Я тебя очень сильно люблю!</h2>
+        <p style="margin-top: 10px;">Спасибо за то, что ты есть.</p>
+        <button class="surprise-btn" onclick="celebrate(350)">Нажми сюда ✨</button>
+    </section>
+    <script>
+        // ТУТ НАСТРАИВАЕТСЯ ДАТА: Год, Месяц (0 - янв, 5 - июнь), День
+        const START_DATE = new Date(2025, 6, 11); 
+
+        const music = document.getElementById('bg-music');
+        const musicBtn = document.querySelector('.music-toggle');
+        const overlay = document.getElementById('welcome-overlay');
+
+        function startEverything() {
+            music.play().then(() => { musicBtn.innerText = '❤️'; musicBtn.classList.add('playing'); }).catch(() => {});
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.visibility = 'hidden'; }, 800);
+            spawnStickers();
+            initIntersectionObserver();
+        }
+
+        function toggleMusic() {
+            if (music.paused) { music.play(); musicBtn.innerText = '❤️'; musicBtn.classList.add('playing'); } 
+            else { music.pause(); musicBtn.innerText = '🎵'; musicBtn.classList.remove('playing'); }
+        }
+
+        function toggleLetter(btn) {
+            const content = btn.nextElementSibling;
+            content.classList.toggle('open');
+            if(content.classList.contains('open')) {
+                btn.innerHTML = 'Закрыть письмо 📂';
+                const rect = btn.getBoundingClientRect();
+                celebrate(40, rect.left + rect.width / 2, rect.top);
+            } else { btn.innerHTML = 'Открыть письмо 💌'; }
+        }
+
+        function updateTimer() {
+            const diff = new Date() - START_DATE;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            document.getElementById('timer').innerHTML = `${days}дн. ${hours}ч. ${minutes}мин.`;
+        }
+        setInterval(updateTimer, 1000); updateTimer();
+
+        // Постоянный дождь из милых смайликов
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.classList.add('falling-heart');
+            heart.innerText = ['❤️', '💖', '💗', '💕', '🌸', '🧸'][Math.floor(Math.random() * 6)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 4 + 's';
+            heart.style.fontSize = Math.random() * 15 + 18 + 'px';
+            document.getElementById('hearts-container').appendChild(heart);
+            setTimeout(() => heart.remove(), 7000);
+        }, 250);
+
+        // Сверхмощный салют конфетти
+        function celebrate(count = 100, customX = null, customY = null) {
+            const confettiContainer = document.getElementById('confetti-container');
+            const colors = ['#ff3385', '#cc0052', '#ffb3d1', '#fffa65', '#fff0f5', '#fe9a8b'];
+            
+            const startX = customX !== null ? customX : window.innerWidth / 2;
+            const startY = customY !== null ? customY : window.innerHeight * 0.75;
+
+            for (let i = 0; i < count; i++) {
+                const piece = document.createElement('div');
+                piece.classList.add('confetti-piece');
+                piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                piece.style.left = startX + 'px'; 
+                piece.style.top = startY + 'px';
+                
+                const angle = Math.random() * Math.PI * 2; 
+                const distance = Math.random() * 380 + 100;
+                piece.style.setProperty('--x', Math.cos(angle) * distance + 'px');
+                piece.style.setProperty('--y', Math.sin(angle) * distance + 'px');
+                
+                confettiContainer.appendChild(piece);
+                setTimeout(() => piece.remove(), 1500);
+            }
+        }
+
+        // Шлейф магии
+        window.addEventListener('mousemove', (e) => { if(Math.random() > 0.8) createSparkle(e.clientX, e.clientY); });
+        window.addEventListener('touchmove', (e) => { createSparkle(e.touches.clientX, e.touches.clientY); });
+
+        function createSparkle(x, y) {
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('magic-sparkle');
+            sparkle.innerText = ['✨', '🌸', '💖', '⭐', '🎈', '🧸'][Math.floor(Math.random() * 6)];
+            sparkle.style.left = x + 'px'; sparkle.style.top = y + 'px';
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 800);
+        }
+
+        // Крупные сочные стикеры параллакса на фоне
+        function spawnStickers() {
+            const totalHeight = document.body.scrollHeight;
+            const bgStickers = ['🧸', '💘', '🌹', '👑', '🕊️', '🍰', '🍿', '🦄', '💌', '🐾'];
+            for (let i = 0; i < 15; i++) {
+                const item = document.createElement('div');
+                item.classList.add('sticker');
+                item.innerText = bgStickers[Math.floor(Math.random() * bgStickers.length)];
+                item.style.left = Math.random() * 82 + 5 + 'vw';
+                item.style.top = Math.random() * (totalHeight - 500) + 250 + 'px';
+                item.setAttribute('data-speed', Math.random() * 0.22 + 0.08);
+                document.body.appendChild(item);
+            }
+        }
+
+        // Плавный вылет карточек и 3D движение
+        function initIntersectionObserver() {
+            const screens = document.querySelectorAll('.screen');
+            const observerOptions = { root: null, threshold: 0.15 };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('reveal-active');
+                    }
+                });
+            }, observerOptions);
+
+            screens.forEach(scr => observer.observe(scr));
+
+            const stickers = document.querySelectorAll('.sticker');
+            let ticked = false;
+            window.addEventListener('scroll', () => {
+                if (!ticked) {
+                    window.requestAnimationFrame(() => {
+                        const scrollY = window.scrollY;
+                        stickers.forEach(st => {
+                            const speed = parseFloat(st.getAttribute('data-speed'));
+                            st.style.transform = `translateY(${scrollY * speed}px)`;
+                        });
+                        ticked = false;
+                    });
+                    ticked = true;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
