@@ -12,85 +12,76 @@
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        /* ЖИВОЙ ЯРКИЙ РОМАНТИЧНЫЙ ФОН */
         body {
             font-family: 'Montserrat', Arial, sans-serif;
             background: linear-gradient(-45deg, #ff9a9e, #fecfef, #fe9a8b, #fbc5cd);
-            background-size: 400% 400%;
-            animation: gradientBg 15s ease infinite;
+            background-size: 400% 400%; animation: gradientBg 15s ease infinite;
             color: #333; overflow-x: hidden; position: relative;
         }
-        @keyframes gradientBg {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* КРУПНАЯ СВЕТЯЩАЯСЯ ГИРЛЯНДА */
+        @keyframes gradientBg { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .garland { position: absolute; top: 0; left: 0; width: 100%; height: 70px; display: flex; justify-content: space-around; pointer-events: none; z-index: 10; }
         .garland-light { font-size: 28px; animation: blink 1.2s infinite alternate; filter: drop-shadow(0 0 10px #ff3385); }
         .garland-light:nth-child(even) { animation-delay: 0.6s; filter: drop-shadow(0 0 10px #fffa65); }
         @keyframes blink { 0% { opacity: 0.4; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.2); } }
-
-        /* ЭФФЕКТНЫЙ ШЛЕЙФ ИЗ ЗВЕЗД И СЕРДЕЧЕК */
         .magic-sparkle { position: fixed; pointer-events: none; z-index: 99999; font-size: 22px; animation: sparkleFade 0.8s forwards ease-out; }
         @keyframes sparkleFade { 0% { transform: translate(-50%, -50%) scale(1.5) rotate(0deg); opacity: 1; filter: drop-shadow(0 0 5px #fff); } 100% { transform: translate(-50%, -50%) scale(0) rotate(360deg); opacity: 0; } }
-
-        /* ЯРКИЕ ПАРИРУЮЩИЕ СТИКЕРЫ НА ФОНЕ */
         .sticker { position: absolute; font-size: 55px; pointer-events: none; z-index: 1; animation: floatSticker 5s infinite alternate ease-in-out; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.08)); }
         @keyframes floatSticker { 0% { transform: translateY(0) rotate(-5deg); } 100% { transform: translateY(-25px) rotate(5deg); } }
-
-        /* ЭКРАН-ЗАСТАВКА */
         #welcome-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(135deg, #ff9a9e, #fecfef); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; transition: opacity 0.8s ease, visibility 0.8s; padding: 20px; }
         #welcome-overlay h1 { font-family: 'Caveat', cursive; font-size: 5rem; color: #fff; text-shadow: 0 10px 20px rgba(204,0,82,0.3); margin-bottom: 40px; }
         .enter-btn { background: #fff; color: #cc0052; border: none; padding: 18px 50px; font-size: 1.4rem; font-weight: bold; border-radius: 50px; cursor: pointer; box-shadow: 0 15px 30px rgba(204, 0, 82, 0.3); transition: all 0.3s; }
         .enter-btn:hover { transform: scale(1.08); box-shadow: 0 20px 40px rgba(204, 0, 82, 0.4); }
-
         #hearts-container, #confetti-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; }
         #hearts-container { z-index: 2; } #confetti-container { z-index: 999; }
-
         .music-toggle { position: fixed; top: 20px; right: 20px; background: #fff; border: none; border-radius: 50%; width: 55px; height: 55px; font-size: 1.6rem; cursor: pointer; box-shadow: 0 8px 20px rgba(204, 0, 82, 0.2); z-index: 1000; display: flex; align-items: center; justify-content: center; transition: transform 0.3s; }
         .music-toggle.playing { animation: pulse 1.2s infinite; }
-
-        /* ЭФФЕКТНЫЙ ВЫЛЕТ ЭКРАНОВ */
-        .screen { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 60px 20px; position: relative; z-index: 3; opacity: 0; transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .screen:nth-child(odd) { transform: translateX(-60px) scale(0.9); }
-        .screen:nth-child(even) { transform: translateX(60px) scale(0.9); }
-        .screen.reveal-active { opacity: 1; transform: translateX(0) scale(1); }
-
-        h1 { font-family: 'Caveat', cursive; font-size: 5.5rem; color: #fff; text-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 10px; }
-        h2 { font-family: 'Caveat', cursive; font-size: 3.8rem; color: #cc0052; margin-bottom: 20px; text-shadow: 0 2px 5px rgba(255,255,255,0.5); }
-        p { font-size: 1.3rem; max-width: 580px; line-height: 1.6; color: #444; font-weight: 600; }
         
-        /* ТАЙМЕР-ОБЛАКО */
+        /* БАЗОВЫЕ СТИЛИ ЭКРАНОВ */
+        .screen { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 20px; position: relative; z-index: 3; opacity: 0; transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .screen:nth-child(odd) { transform: translateX(-40px) scale(0.95); }
+        .screen:nth-child(even) { transform: translateX(40px) scale(0.95); }
+        .screen.reveal-active { opacity: 1; transform: translateX(0) scale(1); }
+        
+        h1 { font-family: 'Caveat', cursive; font-size: 5.5rem; color: #fff; text-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 10px; }
+        h2 { font-family: 'Caveat', cursive; font-size: 3.8rem; color: #cc0052; margin-bottom: 20px; }
+        p { font-size: 1.3rem; max-width: 580px; line-height: 1.6; color: #444; font-weight: 600; }
         .timer-box { background: rgba(255, 255, 255, 0.85); padding: 20px 40px; border-radius: 30px; margin-top: 20px; box-shadow: 0 15px 35px rgba(204, 0, 82, 0.15); border: 2px solid #fff; }
         .timer-box span { font-weight: 800; color: #cc0052; font-size: 1.7rem; }
-
-        /* НЕОНОВЫЙ ПОЛЯРОИД */
-        .photo-card { margin: 25px 0; background: #fff; padding: 20px 20px 55px 20px; border-radius: 16px; box-shadow: 0 25px 50px rgba(204, 0, 82, 0.2); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 3px solid #fff; }
+        .photo-card { margin: 25px 0; background: #fff; padding: 20px 20px 55px 20px; border-radius: 16px; box-shadow: 0 25px 50px rgba(204, 0, 82, 0.2); transition: all 0.5s ease; border: 3px solid #fff; }
         .photo-card img { max-width: 100%; max-height: 520px; border-radius: 8px; display: block; }
-        .photo-card:hover { transform: scale(1.06) rotate(3deg); box-shadow: 0 35px 60px rgba(204, 0, 82, 0.35); }
-
-        /* КНОПКА-КОНВЕРТ */
+        .photo-card:hover { transform: scale(1.04) rotate(2deg); }
         .letter-btn { background: linear-gradient(45deg, #ff3385, #cc0052); color: #fff; border: none; padding: 14px 35px; font-size: 1.1rem; font-weight: bold; border-radius: 50px; cursor: pointer; margin-top: 20px; box-shadow: 0 10px 20px rgba(204, 0, 82, 0.2); transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px; }
-        .letter-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 25px rgba(204, 0, 82, 0.3); }
-        
-        /* СВИТОК С ПИСЬМОМ */
-        .letter-content { max-width: 550px; font-family: 'Caveat', cursive; font-size: 1.8rem; line-height: 1.5; color: #600; background: #fffbf0; padding: 0; max-height: 0; overflow: hidden; border-radius: 16px; transition: all 0.6s ease-in-out; margin-top: 15px; opacity: 0; box-shadow: inset 0 0 20px rgba(0,0,0,0.05); }
-        .letter-content.open { padding: 25px; max-height: 350px; opacity: 1; border: 2px solid #ffccd5; }
-
-        .heart-icon { font-size: 3.8rem; color: #ff3385; animation: pulse 1.3s infinite; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1)); }
+        .letter-btn:hover { transform: translateY(-3px); }
+        .letter-content { max-width: 550px; font-family: 'Caveat', cursive; font-size: 1.8rem; line-height: 1.4; color: #600; background: #fffbf0; padding: 0; max-height: 0; overflow: hidden; border-radius: 16px; transition: all 0.5s ease-in-out; margin-top: 15px; opacity: 0; box-shadow: inset 0 0 20px rgba(0,0,0,0.05); }
+        .letter-content.open { padding: 20px; max-height: 500px; opacity: 1; border: 2px solid #ffccd5; }
+        .heart-icon { font-size: 3.8rem; color: #ff3385; animation: pulse 1.3s infinite; }
         .surprise-btn { background: linear-gradient(45deg, #fffa65, #ff3385, #cc0052); background-size: 200% auto; color: white; border: none; padding: 18px 55px; font-size: 1.4rem; font-weight: bold; border-radius: 50px; cursor: pointer; margin-top: 45px; box-shadow: 0 15px 35px rgba(204, 0, 82, 0.35); transition: all 0.3s; animation: gradientBtn 3s infinite; }
         @keyframes gradientBtn { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        .surprise-btn:hover { transform: scale(1.07); box-shadow: 0 20px 45px rgba(204, 0, 82, 0.5); }
-        
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
-        .falling-heart { position: absolute; animation: fall linear infinite; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.05)); }
+        .falling-heart { position: absolute; animation: fall linear infinite; }
         @keyframes fall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 100% { transform: translateY(105vh) rotate(360deg); opacity: 0; } }
         .confetti-piece { position: fixed; width: 12px; height: 12px; animation: explode 1.5s ease-out forwards; z-index: 99999; }
         @keyframes explode { 0% { transform: translate(0, 0) rotate(0deg); opacity: 1; } 100% { transform: translate(var(--x), var(--y)) rotate(720deg); opacity: 0; } }
+
+        /* 📱 УМНАЯ МОБИЛЬНАЯ ОПТИМИЗАЦИЯ ДЛЯ СМАРТФОНОВ */
+        @media (max-width: 768px) {
+            h1 { font-size: 3rem; }
+            h2 { font-size: 2.2rem; margin-bottom: 10px; }
+            p { font-size: 1.05rem; padding: 0 10px; }
+            .timer-box { padding: 15px 25px; border-radius: 20px; }
+            .timer-box span { font-size: 1.3rem; }
+            .photo-card { padding: 12px 12px 40px 12px; margin: 15px 0; border-radius: 12px; width: 100%; max-width: 340px; }
+            .photo-card img { max-height: 380px; }
+            .letter-btn { padding: 10px 25px; font-size: 0.95rem; margin-top: 10px; }
+            .letter-content { font-size: 1.4rem; width: 100%; max-width: 340px; }
+            .sticker { font-size: 35px; } /* Уменьшаем фоновые стикеры, чтобы не мешали */
+            .garland-light { font-size: 20px; }
+            #welcome-overlay h1 { font-size: 3rem; }
+            .enter-btn { padding: 14px 35px; font-size: 1.1rem; }
+            .screen { padding: 30px 15px; }
+        }
     </style>
+
 </head>
 <body>
     <div class="bg-glow"><div class="glow-circle"></div><div class="glow-circle"></div></div>
